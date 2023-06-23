@@ -61,6 +61,7 @@ fun AddNewTransaction(
                 Text(text = stringResource(id = R.string.add_new_expenses_label))
             },
             singleLine = true,
+            isError = !state.value.isValidAmount
         )
 
         Row(

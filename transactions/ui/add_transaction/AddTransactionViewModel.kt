@@ -1,23 +1,26 @@
-package com.example.billscontrol.expenses
+package com.example.billscontrol.transactions.ui.add_transaction
 
 import androidx.lifecycle.ViewModel
-import com.example.billscontrol.expenses.ui.model.Transaction
-import com.example.billscontrol.expenses.ui.model.TransactionTypeEnum
-import com.example.billscontrol.expenses.utils.isCurrency
+import com.example.billscontrol.transactions.ui.model.Transaction
+import com.example.billscontrol.transactions.ui.model.TransactionTypeEnum
+import com.example.billscontrol.transactions.utils.isCurrency
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-class NewTransactionViewModel : ViewModel() {
+class AddTransactionViewModel : ViewModel() {
 
     private val _newTransactionUiState = MutableStateFlow(NewTransactionUiState())
     val newTransactionUiState : StateFlow<NewTransactionUiState> = _newTransactionUiState.asStateFlow()
 
     fun saveTransaction(type: TransactionTypeEnum) {
-        if(_newTransactionUiState.value.isValidAmount){
+        if(_newTransactionUiState.value.isValidAmount == ValidAmount.Valid){
             _newTransactionUiState.update {
-                it.copy(type = type)
+                it.copy(
+                    type = type,
+                    closeDialog = true
+                )
             }
             //TODO connect to repository
         }
@@ -43,5 +46,12 @@ class NewTransactionViewModel : ViewModel() {
 data class NewTransactionUiState(
     val amount: String = "",
     val type: TransactionTypeEnum = TransactionTypeEnum.UNKNOWN,
-    val isValidAmount : Boolean = false,
+    val isValidAmount : ValidAmount = ValidAmount.Idle,
+    val closeDialog : Boolean = false
 )
+
+sealed interface ValidAmount {
+    object Idle: ValidAmount
+    object Valid: ValidAmount
+    object Error: ValidAmount
+}

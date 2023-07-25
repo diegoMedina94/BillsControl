@@ -1,4 +1,4 @@
-package com.example.billscontrol.expenses.ui.model
+package com.example.billscontrol.transactions.ui.model
 
 import java.util.Date
 
